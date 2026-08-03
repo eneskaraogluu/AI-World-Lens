@@ -24,7 +24,7 @@ jobs:
       ALLOW_DESTRUCTIVE_DATABASE_TESTS: "0"
       RUN_LOCAL_SERVER_TESTS: "0"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -70,7 +70,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: docker/setup-buildx-action@v3
       - name: Validate Compose configuration
         run: docker compose config
