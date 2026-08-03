@@ -1,0 +1,46 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-world-lens:local
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: sqlite:////app/data/ai_world_lens.db
+      PYTHON_DOTENV_DISABLED: "1"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ai_world_lens_data:/app/data
+      - generated_images:/app/frontend/assets/generations
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 6
+      start_period: 15s
+    restart: unless-stopped
+
+  frontend:
+    image: ai-world-lens:local
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["python", "-m", "http.server", "3000", "--bind", "0.0.0.0", "--directory", "/app/frontend"]
+    ports:
+      - "3000:3000"
+    volumes:
+      - generated_images:/app/frontend/assets/generations:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 6
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  ai_world_lens_data:
+  generated_images:

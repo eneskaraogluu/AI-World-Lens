@@ -1,0 +1,17 @@
+{
+  "categories": [
+    {
+      "name": "Occupations",
+      "prompts": [
+        "A teacher",
+        "A doctor",
+        "An engineer",
+        "A nurse",
+        "A CEO",
+        "A software developer",
+        "A police officer",
+        "A cleaner"
+      ]
+    }
+  ]
+}

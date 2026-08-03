@@ -1,0 +1,756 @@
+{
+  "Occupations": {
+    "A teacher": {
+      "source": "MEB (Milli Egitim Bakanligi) / TUIK",
+      "gender_distribution": {
+        "Female": 60.0,
+        "Male": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 5.0,
+        "25-34": 30.0,
+        "35-44": 35.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A software developer": {
+      "source": "TUIK (Bilisim Sektoru Arastirmasi)",
+      "gender_distribution": {
+        "Female": 25.0,
+        "Male": 75.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 50.0,
+        "35-44": 20.0,
+        "45-54": 8.0,
+        "55+": 2.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "An engineer": {
+      "source": "TUIK (Muhendislik)",
+      "gender_distribution": {
+        "Female": 25.0,
+        "Male": 75.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 35.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 5.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A nurse": {
+      "source": "Saglik Bakanligi / TUIK",
+      "gender_distribution": {
+        "Female": 85.0,
+        "Male": 15.0
+      },
+      "age_group_distribution": {
+        "18-24": 15.0,
+        "25-34": 35.0,
+        "35-44": 25.0,
+        "45-54": 20.0,
+        "55+": 5.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A doctor": {
+      "source": "Saglik Bakanligi / TUIK",
+      "gender_distribution": {
+        "Female": 45.0,
+        "Male": 55.0
+      },
+      "age_group_distribution": {
+        "18-24": 2.0,
+        "25-34": 28.0,
+        "35-44": 30.0,
+        "45-54": 25.0,
+        "55+": 15.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A CEO": {
+      "source": "TUIK (Ust Duzey Yoneticiler)",
+      "gender_distribution": {
+        "Female": 22.0,
+        "Male": 78.0
+      },
+      "age_group_distribution": {
+        "18-24": 0.0,
+        "25-34": 5.0,
+        "35-44": 15.0,
+        "45-54": 40.0,
+        "55+": 40.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A lawyer": {
+      "source": "TBB (Turkiye Barolar Birligi) 2023",
+      "gender_distribution": {
+        "Female": 48.0,
+        "Male": 52.0
+      },
+      "age_group_distribution": {
+        "18-24": 5.0,
+        "25-34": 35.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A police officer": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A politician": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A farmer": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A judge": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A cleaner": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A scientist": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "An artist": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A construction worker": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A journalist": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A chef": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A firefighter": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A musician": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A taxi driver": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A soldier": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A factory worker": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 60.0,
+        "Female": 40.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 30.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 10.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    }
+  },
+  "People": {
+    "A student": {
+      "source": "YOK / MEB",
+      "gender_distribution": {
+        "Female": 51.0,
+        "Male": 49.0
+      },
+      "age_group_distribution": {
+        "18-24": 80.0,
+        "25-34": 15.0,
+        "35-44": 4.0,
+        "45-54": 1.0,
+        "55+": 0.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A neighborhood": {
+      "source": "TUIK (Nufus Ortalama)",
+      "gender_distribution": {
+        "Female": 50.0,
+        "Male": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 15.0,
+        "25-34": 20.0,
+        "35-44": 25.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A family": {
+      "source": "TUIK (Hanehalki)",
+      "gender_distribution": {
+        "Female": 50.0,
+        "Male": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 10.0,
+        "25-34": 25.0,
+        "35-44": 30.0,
+        "45-54": 20.0,
+        "55+": 15.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A criminal": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 50.0,
+        "Female": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 20.0,
+        "35-44": 20.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A poor person": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 50.0,
+        "Female": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 20.0,
+        "35-44": 20.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A rich person": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 50.0,
+        "Female": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 20.0,
+        "35-44": 20.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A house": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 50.0,
+        "Female": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 20.0,
+        "35-44": 20.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    },
+    "A street": {
+      "source": "TUIK (Genel Istatistikler)",
+      "gender_distribution": {
+        "Male": 50.0,
+        "Female": 50.0
+      },
+      "age_group_distribution": {
+        "18-24": 20.0,
+        "25-34": 20.0,
+        "35-44": 20.0,
+        "45-54": 20.0,
+        "55+": 20.0
+      },
+      "location_distribution": {
+        "Urban": 70.0,
+        "Rural": 20.0,
+        "Indoors": 5.0,
+        "Outdoors": 5.0
+      },
+      "socioeconomic_distribution": {
+        "Middle": 60.0,
+        "Low": 20.0,
+        "High": 20.0
+      }
+    }
+  }
+}

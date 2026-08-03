@@ -1,0 +1,15 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+*.db
+*.sqlite*
+frontend/assets/generations/*
+!frontend/assets/generations/.gitkeep
+.pytest_cache/
+.coverage
+htmlcov/
+.idea/
+.vscode/
+docker-compose.override.yml

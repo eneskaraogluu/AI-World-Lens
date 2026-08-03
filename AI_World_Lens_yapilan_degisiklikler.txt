@@ -1,0 +1,144 @@
+AI WORLD LENS - YAPILAN DEGISIKLIKLER RAPORU
+=============================================
+
+1. LIVE EXPERIMENT CINEMA VE PREPARED REPLAY
+---------------------------------------------
+
+- Cinema ve Prepared Replay ekranlarindaki ana gorseller artik kirpilmadan gosteriliyor.
+- Ana gorsellerde object-fit: contain ve object-position: center kullaniliyor.
+- Gorselin dogal en-boy orani korunuyor; ust, alt veya yan kisimlari kesilmiyor.
+- Bos kalan alanlarda ayni gorselin dusuk opaklikli ve blur uygulanmis hali arka plan olarak kullaniliyor.
+- Arka plandaki blur gorsel dekoratif; ondeki asil gorsel kesinlikle kirpilmiyor.
+- Filmstrip kucuk resimleri tasarimi doldurmasi icin object-fit: cover kullanmaya devam ediyor.
+- Bir filmstrip gorseline tiklandiginda ana ekran, aciklama, analiz bilgisi ve aktif ornek ayni kayda geciyor.
+- Klavyeden Enter veya Space ile de filmstrip ornekleri acilabiliyor.
+- Gec yuklenen eski bir gorselin yeni secilen ornegin ustune yazmasi engellendi.
+- Gorsel bulunamazsa veya yuklenemezse bozuk resim ikonu yerine okunabilir bir bilgilendirme alani gosteriliyor.
+
+2. IMAGE MODAL VE PROOF WALL
+----------------------------
+
+- Image modal icindeki buyuk gorsel contain ile, merkezde ve kirpilmadan gosteriliyor.
+- Proof Wall ana kartlarindaki gorseller de artik kirpilmadan gorulebiliyor.
+- Masaustu ekranlarda Proof Wall bes sutun olacak sekilde duzenlendi.
+- Daha dar ekranlarda sutun sayisi otomatik olarak azaltiliyor.
+- Galeri gorsellerinin uzerine gelindiginde uygulanan buyutme nedeniyle kenar kaybi olmasi engellendi.
+- Galeri durum etiketi SUCCESS yerine daha dogru bir ifade olan VALIDATED olarak gosteriliyor.
+
+3. GORSEL URETIM PROMPTU
+------------------------
+
+Yeni uretilen gorsellerin sunuma daha uygun olmasi icin ortak prompt kurallari guclendirildi:
+
+- Kamera kisiden daha uzakta, orta-genis bir kompozisyon kuruyor.
+- Kisinin basi, saci, yuzu, omuzlari, kollari ve elleri kadraj icinde isteniyor.
+- Bas ustunde yeterli bosluk birakilmasi isteniyor.
+- Asiri yakin plan ve yuz kirpma yasaklaniyor.
+- Yuzun net, gorunur ve engellenmemis olmasi isteniyor.
+- Motion blur, yuzde alan derinligi bulanikligi ve sansur benzeri bulaniklik engelleniyor.
+- Metin, logo ve filigran uretilmemesi isteniyor.
+- Meslek icin zorunlu bir cinsiyet, etnik koken, yas, engellilik veya ekonomik durum tanimlanmiyor.
+
+ONEMLI:
+Eski kayitlarda bulunan bulanik, yakin plan veya kadraji kesilmis kaynak PNG dosyalari CSS ile duzeltilemez. Yapilan duzeltmeler eski gorseli kirpmadan gosterir; fakat kaynak dosyanin kendi bulanikligini gidermez. Yeni prompt kurallari yeni uretilen gorseller icin gecerlidir.
+
+4. KOMPOZISYON KALITE KAPISI
+----------------------------
+
+Vision analizi artik yalnizca demografik siniflandirma yapmiyor; gorselin arastirma icin kullanilabilirligini da kontrol ediyor.
+
+Bir ornegin analize kabul edilmesi icin:
+
+- Tam olarak bir gorunur kisi bulunmali.
+- Kisinin kadraji uygun ve yeterince eksiksiz olmali.
+- Yuz net ve gorunur olmali.
+- Demografik sunum kodlanabilir olmali.
+
+Su durumlar kalite dislamasina neden olabilir:
+
+- Bulanik yuz
+- Gorunmeyen veya kapali yuz
+- Kesilmis bas veya yuz
+- Asiri yakin plan
+- Birden fazla kisi
+- Demografik olarak kodlanamayan gorsel
+- Eksik veya belirsiz analiz sonucu
+
+Kaliteyi gecemeyen gorseller silinmiyor. Sistem bunlari UNVERIFIED/EXCLUDED olarak sakliyor, ekranda guvenli bir neden gosteriyor ve siradaki gorseli islemeye devam ediyor.
+
+Yuzdeler, grafikler ve karsilastirmalar yalnizca kalite kapisini gecen dogrulanmis orneklerden hesaplaniyor. Boylece hatali bir gorsel istatistikleri bozmaz.
+
+5. ESKI KAYITLAR VE PREPARED REPLAY
+-----------------------------------
+
+- Eski hazirlanmis sunum kayitlari calismaya devam ediyor.
+- Eski kayitlara sonradan kalite kontrolu yapilmis gibi sahte bir bilgi eklenmiyor.
+- Yeni kalite politikasiyla kaydedilen replay'ler "composition quality assessed" olarak belirtiliyor.
+- Eski replay'ler "Legacy prepared replay - image quality not assessed" olarak acikca belirtiliyor.
+- Eski basarili sonuclarin durumu geriye donuk olarak degistirilmiyor.
+- View Full Comparison akisi korunuyor ve secili deneyin kendi sonuclarini yukluyor.
+
+6. API VE AYAR GUVENLIGI
+------------------------
+
+- Gercek API cagrisi yapilmadi.
+- Gercek .env dosyasi degistirilmedi.
+- Gercek veritabani ve mevcut sonuclar degistirilmedi.
+- Backend generator ile test amacli gercek gorsel uretilmedi.
+- Sadece .env.example dosyasina yorum satiri olarak sunum icin onerilen ayarlar eklendi.
+
+Sunum icin onerilen tutarli ayarlar:
+
+OPENAI_IMAGE_SIZE=1536x1024
+OPENAI_IMAGE_QUALITY=medium
+
+Ayni arastirma serisi boyunca boyut ve kalite ayarinin degistirilmemesi onerilir.
+
+7. YAPILAN TESTLER
+------------------
+
+Frontend testleri basarili:
+
+- Cinema image state testi
+- Cinema presentation testi
+- Vision fallback frontend testi
+- Frontend integrity testi
+- Image fit testi
+- Presentation backup frontend testi
+- View Full Comparison testi
+
+Backend testleri basarili:
+
+- Python compile kontrolu
+- Composition quality gate testi
+- Queue worker session lifecycle testi
+- Vision failover testi
+- Offline mock API testi
+- Presentation backup servis testi
+- Presentation backup API testi
+
+Kalite testinde iyi bir ornek kabul edildi; bulanik, basi kesilmis, yuzu gorunmeyen, birden fazla kisi iceren ve eksik analizli ornekler dogru sekilde dislandi. Sistem tum ornekleri islemeye devam etti ve istatistiklere yalnizca kabul edilen ornek girdi.
+
+8. EKRAN VE EN-BOY ORANI KONTROLLERI
+------------------------------------
+
+Asagidaki sahte gorsel oranlari icin contain geometrisi test edildi:
+
+- 1024x1024
+- 1536x1024
+- 1024x1536
+
+Asagidaki ekran boyutlarinda yatay tasma ve grid davranisi kontrol edildi:
+
+- 1920x1080
+- 1600x900
+- 1366x768
+
+Live Cinema, ana gorsel durumu, modal davranisi, Proof Wall galerisi ve filmstrip davranisi ayri ayri test edildi.
+
+9. SUNUMDA KISA ANLATIM
+-----------------------
+
+AI World Lens, meslek promptlari icin yapay zeka tarafindan uretilen insan temsillerini analiz eder. Sistem once gorseli uretir, ardindan vision modeliyle gorunur sunumu ve kompozisyon kalitesini inceler. Yalnizca net, tek kisili ve kodlanabilir gorseller kanit setine kabul edilir. Kabul edilen sonuclar referans verilerle karsilastirilir; kaliteyi gecemeyen ornekler istatistiklere dahil edilmeden nedenleriyle birlikte saklanir. Prepared Replay ozelligi, daha once dogrulanmis bir deneyi API kullanmadan sunumda yeniden oynatabilir.
+
+Rapor tarihi: 03.08.2026

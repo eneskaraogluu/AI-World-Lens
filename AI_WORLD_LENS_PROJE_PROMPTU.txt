@@ -1,0 +1,261 @@
+AI WORLD LENS — PROJE BAĞLAMI VE GELİŞTİRME PROMPTU
+
+Şu anda açık olan ve çalışan `AI_World_Lens` workspace'i üzerinde doğrudan çalış.
+
+PROJENİN AMACI
+
+AI World Lens, üretken yapay zekâ modellerinin meslekleri ve toplumsal rolleri görsel olarak nasıl temsil ettiğini inceleyen, sunum kalitesinde hazırlanmış bir yapay zekâ temsil analizi platformudur.
+
+Kullanıcı bir meslek promptu seçer. Örnekler:
+
+- An engineer
+- A nurse
+- A teacher
+- A software developer
+- A CEO
+- A cleaner
+- A doctor
+- A police officer
+
+Sistem seçilen prompt için yapay zekâ ile yeni görseller üretir, her görseli ayrı ayrı görsel analiz modeline gönderir, yalnızca doğrulanmış sonuçları istatistiklere dahil eder ve sonuçları gerçek dünya referans verileriyle karşılaştırır.
+
+PROJENİN TEMEL ÇALIŞMA AKIŞI
+
+1. Kullanıcı sol menüden bir meslek seçer.
+2. Kullanıcı `Run 10 Samples` düğmesine basar.
+3. Backend yeni bir deney oluşturur ve örnekleri iş kuyruğuna ekler.
+4. OpenAI görsel modeli, seçilen meslek promptu için yeni görseller üretir.
+5. Üretilen her görsel Gemini Vision tarafından analiz edilir.
+6. Analiz sırasında görseldeki kişi sayısı ile görünen yaş ve cinsiyet sunumu belirlenir.
+7. Yalnızca hem görsel üretimi hem de görsel analizi başarıyla tamamlanan örnekler doğrulanmış kabul edilir.
+8. Doğrulanmış örneklerden yapay zekâ dağılımları hesaplanır.
+9. Bu dağılımlar projedeki referans veri setiyle karşılaştırılır.
+10. KPI kartları, grafikler ve araştırma gözlemi güncellenir.
+
+KULLANILAN TEKNOLOJİLER
+
+- Frontend: Vanilla HTML, CSS ve JavaScript
+- Backend: FastAPI
+- Veritabanı: SQL Server ve SQLAlchemy
+- Görsel üretimi: OpenAI GPT Image
+- Görsel analizi: Gemini Vision (`gemini-2.5-flash`)
+- İşlem modeli: Asenkron iş kuyruğu
+
+AKTİF DOSYALAR
+
+- `frontend/index.html`
+- `frontend/js/api.js`
+- `frontend/js/app_v3.js`
+- `frontend/styles/style_v3.css`
+- `backend/services/queue_worker.py`
+- `backend/services/statistics_service.py`
+- `backend/services/comparison_service.py`
+- `backend/schemas/comparison.py`
+- `data/real_world_data.json`
+
+DENEY SONUÇ DURUMLARI
+
+Sistemde üç temel örnek durumu bulunur:
+
+1. VALIDATED / SUCCESS
+
+Görsel başarıyla üretilmiş ve Gemini Vision analizi de başarıyla tamamlanmıştır. Yalnızca bu örnekler grafiklere, dağılımlara ve sapma hesaplarına katılır.
+
+2. UNVERIFIED
+
+Görsel başarıyla üretilmiştir ancak görsel analiz tamamlanamamıştır. Bunun nedeni kota sınırı, geçici sağlayıcı hatası veya analiz servisinin yanıt verememesi olabilir. Bu durumda görsel kullanıcıya gösterilebilir fakat örnek istatistiklere dahil edilmez.
+
+3. FAILED
+
+Görsel üretimi tamamlanamamıştır veya işlem beklenmeyen bir teknik hatayla sona ermiştir. Bu örnek de hiçbir istatistiğe dahil edilmez.
+
+ÖNEMLİ AYRIM
+
+Görselde bir CEO'ya benzeyen kişi bulunması, örneğin otomatik olarak başarılı sayılması için yeterli değildir. Sistem içerik benzerliğini gözle değerlendirmiyor. Başarılı kabul edilmesi için Gemini Vision analizinin teknik olarak tamamlanması ve kullanılabilir sınıflandırma döndürmesi gerekir.
+
+SUNUMDA KULLANILABİLECEK AÇIKLAMA
+
+“Sistem yalnızca görsel üretimini başarı kabul etmiyor. Görselin analiz modeli tarafından doğrulanması gerekiyor. Analiz tamamlanamazsa örnek UNVERIFIED olarak işaretleniyor ve hiçbir grafiğe veya sapma hesabına katılmıyor. Gösterilen tüm oranlar mevcut deneyin doğrulanmış örneklerinden hesaplanıyor.”
+
+LIVE EXPERIMENT CINEMA
+
+Run düğmesine basıldıktan sonra tam ekran deney animasyonu açılır.
+
+Bu ekranda:
+
+- Üretilen örnekler sırasıyla gösterilir.
+- Sistemin o anda görsel üretme, analiz etme veya doğrulama aşamasında olduğu anlatılır.
+- Başarılı örnekte üretilen görsel ve başarı durumu gösterilir.
+- Analizi tamamlanamayan örnekte amber renkli `UNVERIFIED` durumu ve güvenli hata açıklaması gösterilir.
+- Üretilemeyen örnekte kırmızı `FAILED` durumu ve hata açıklaması gösterilir.
+- Başarılı görseller yaklaşık 3,6 saniye ekranda tutulur.
+- Başarısız veya doğrulanamayan örnekler yaklaşık 5,2 saniye ekranda tutulur.
+- Deney sonunda özet durum yaklaşık 5 saniye gösterilir.
+- Kullanıcı isterse animasyonu arka plana alabilir.
+- Görseller kırpılmadan, `object-fit: contain` mantığıyla tam çerçeve içinde gösterilir.
+
+ANA EKRANDAKİ KPI'LAR
+
+1. Successful Samples
+
+Hem görsel üretimi hem de görsel analizi tamamlanan doğrulanmış örnek sayısıdır.
+
+2. Valid Person Analyses
+
+Analizi başarılı olan ve görselde en az bir kişi tespit edilen örnek sayısıdır.
+
+3. Success Rate
+
+Doğrulanmış başarılı örnek sayısının tamamlanmış başarılı ve başarısız örneklerin toplamına oranıdır.
+
+4. Largest Gender Deviation
+
+Yapay zekânın ürettiği doğrulanmış cinsiyet sunumu dağılımıyla referans veri dağılımı arasındaki en büyük mutlak farktır.
+
+Arayüzde kullanıcının isteği doğrultusunda `%` işaretiyle gösterilir. Ancak bilimsel olarak bu değer iki yüzde oranı arasındaki “yüzde puan farkı”dır.
+
+Örnek:
+
+- Referans erkek oranı: %78
+- Yapay zekâ erkek oranı: %100
+- Sapma: %22 olarak gösterilir
+- Sunum sırasında en doğru sözlü ifade: “22 yüzde puanlık fark”
+
+Sapma sıfırdan büyükse kırmızı renkle gösterilir. Ancak geçerli cinsiyet analizi yoksa sapma hesaplanmaz; kartta `—` ve `Not enough validated gender data` görünür. Veri yokken kesinlikle referans oranı sahte bir sapma gibi gösterilmemelidir.
+
+5. Reference Source
+
+Seçili meslek için karşılaştırma tabanının hangi kaynaktan geldiğini gösterir.
+
+GRAFİKLER
+
+- Cinsiyet temsili grafiği, referans dağılımla doğrulanmış yapay zekâ dağılımını karşılaştırır.
+- Yaş temsili grafiği, referans yaş dağılımıyla doğrulanmış yapay zekâ yaş dağılımını karşılaştırır.
+- Grafiklerde yalnızca ilgili boyutta geçerli analizi bulunan örnekler kullanılmalıdır.
+- Geçerli yapay zekâ verisi yoksa grafik veya sapma sonucu oluşturulmamalıdır.
+- Örneklem sayısı ilgili sınıflandırma boyutuna göre doğru gösterilmelidir.
+- Cinsiyet grafiği `valid_gender_analyses`, yaş grafiği `valid_age_analyses` değerini kullanmalıdır.
+
+RESEARCH OBSERVATION
+
+Araştırma gözlemi mevcut sonuçlardan deterministik olarak oluşturulur. Bunun için ilave bir ücretli model çağrısı yapılmaz.
+
+Gözlem yalnızca gerçekten veri bulunan boyutlardan üretilmelidir. Boş dağılımlar üzerinden yorum yapılmamalıdır. Yapay zekâ ve referans değerleri aynıysa “referansla eşleşiyor” denmelidir; “daha sık temsil ediyor” gibi yanlış bir ifade kullanılmamalıdır.
+
+VERİ VE OTURUM DAVRANIŞI
+
+- Eski deney kayıtları veritabanında korunur.
+- Yeni bir tarayıcı veya sunum oturumunda eski deney sonuçları ana ekrana taşınmaz.
+- Sayfa yeni açıldığında seçilen prompt için temiz bir başlangıç görünümü sunulur.
+- Kullanıcı yeni bir Run başlattığında yalnızca o oturumda oluşturulan yeni deney ekrana bağlanır.
+- Böylece daha önce CEO veya başka bir meslek için yapılmış deneyler yeni sunumda yanlışlıkla aktif deney gibi görünmez.
+- Sayfa yenilenirse frontend oturum eşlemesi sıfırlanır. Bu davranış temiz sunum başlangıcı sağlamak için bilinçlidir.
+- Veritabanındaki geçmiş sonuçlar silinmez.
+
+REFERANS VERİLER
+
+Referans karşılaştırmaları `data/real_world_data.json` dosyasından gelir. Her meslek için cinsiyet ve yaş dağılımlarının toplamı %100 olmalıdır.
+
+Bu kaynaklar proje içinde karşılaştırma tabanı olarak kullanılmaktadır. Sunum sırasında bunları mutlak ve tartışmasız toplumsal gerçek olarak değil, projede kullanılan referans veri seti olarak tanımla. Kesin akademik veya resmî iddia gerekiyorsa kaynakların doğrudan bağlantıları ayrıca doğrulanmalıdır.
+
+KOTA VE API DAVRANIŞI
+
+- OpenAI görsel üretim bakiyesi ile Gemini kotası birbirinden ayrıdır.
+- Kullanıcının OpenAI için aldığı yaklaşık 10 dolarlık kredi Gemini kotasını artırmaz.
+- Daha önce Gemini tarafında `429 RESOURCE_EXHAUSTED` hatası görülmüştür.
+- Görülen sınır, `gemini-2.5-flash` ücretsiz katmanındaki günlük istek kotasıyla ilgilidir.
+- Bu nedenle görsel OpenAI tarafından başarıyla üretildiği hâlde Gemini analizi tamamlanamaz ve örnek UNVERIFIED olabilir.
+- OpenAI tarafında da geçici `429 rate limit` hataları oluşabilir.
+- Geçici sağlayıcı baskısını azaltmak için backend işçi sayısı en fazla 2 olacak şekilde sınırlandırılmıştır.
+- Sistem ana ekranda `System Configured` gösterir. Bu ifade anahtarların yapılandırıldığını belirtir; kalan canlı kotanın önceden kesin olarak bilindiği anlamına gelmez.
+- Canlı kota ancak gerçek Run sırasında sağlayıcı yanıtıyla anlaşılabilir.
+
+BİLİMSEL SINIRLAR
+
+- 10 örnek, yöntemin nasıl çalıştığını göstermek için uygun bir demo örneklemidir.
+- 10 örnek toplum veya model davranışı hakkında kesin genelleme yapmak için yeterli değildir.
+- Sonuçlar nedensellik kanıtlamaz.
+- Yaş ve cinsiyet analizleri kişilerin gerçek kimliğini belirlemez; yalnızca görseldeki görünen sunumu sınıflandırır.
+- Güvenli sunum cümlesi şudur:
+
+“Belirli bir prompt, model ve deney koşulu altında üretilen küçük örneklemde, referans dağılımdan farklı bir temsil kalıbı gözlenmiştir.”
+
+DOĞRULANMIŞ HATA ÖNLEMLERİ
+
+- Yapay zekâ verisi yoksa farklar sıfır kabul edilir ve sahte sapma üretilmez.
+- Başarısız örnekler grafiklere girmez.
+- UNVERIFIED örnekler grafiklere girmez.
+- Sapma kartı yalnızca geçerli cinsiyet analizi varsa hesaplanır.
+- Yaş ve cinsiyet için ayrı geçerli örnek sayıları tutulur.
+- Eski veritabanı sonuçları yeni sunum oturumuna karışmaz.
+- Mock test sonuçları geçerli analiz statüsüyle işlenir.
+- Ham ve gizli sağlayıcı hata ayrıntıları kullanıcı arayüzüne gönderilmez.
+- UI'da güvenli ve anlaşılır hata açıklamaları kullanılır.
+- Run sayacı sabit 10 metnine bağımlı değildir; yapılandırılmış örnek sayısını kullanır.
+
+TESTLER
+
+Projede veri bütünlüğü ve frontend davranışını kontrol eden testler bulunur:
+
+- `test_data_integrity.py`
+- `test_frontend_integrity.js`
+
+Kontrol edilen önemli durumlar:
+
+- Tüm meslek promptlarının referans veride bulunması
+- Referans cinsiyet ve yaş dağılımlarının %100'e tamamlanması
+- Sonuç olmayan deneyde farkın sıfır olması
+- Yalnızca başarısız örnek bulunan deneyde sapma oluşmaması
+- Geçerli örnekte doğru sayım ve dağılım oluşturulması
+- Yeni oturumun geçmiş başarısızlık ve sapmaları maskelemesi
+- Geçerli ölçüm olduğunda sapma ve kırmızı uyarının doğru oluşması
+
+ÇALIŞTIRMA
+
+Windows PowerShell veya terminalde:
+
+cd C:\Users\enes\Desktop\AI_World_Lens
+.\baslat.bat
+
+Ardından:
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000
+
+Backend servis veya şema dosyaları değiştirildiyse iki terminali de kapat, `baslat.bat` dosyasını yeniden çalıştır ve tarayıcıda `Ctrl+F5` yap.
+
+GELİŞTİRME SIRASINDA UYULACAK KURALLAR
+
+- Mevcut mimariyi bozma.
+- Çalışan özellikleri gereksiz yere yeniden yazma.
+- `.env` dosyasını okuma, ekrana yazdırma veya değiştirme.
+- API anahtarlarını hiçbir çıktıda gösterme.
+- `venv` klasörünü değiştirme.
+- Veritabanını silme veya sıfırlama.
+- Kullanıcı açıkça istemeden ücretli API çağrısı yapma.
+- Testlerde gerçek OpenAI veya Gemini isteği gönderme.
+- Eski deney kayıtlarını silme; yeni sunum oturumundan ayır.
+- Veri yokken yüzde, grafik, sapma veya bilimsel sonuç uydurma.
+- Sağlayıcı kotası nedeniyle analiz yapılamayan görseli içerik açısından başarısızmış gibi etiketleme; UNVERIFIED olarak ayır.
+- UI değişikliklerinden sonra masaüstü görünümünü, responsive davranışı, taşmaları ve animasyon yerleşimini kontrol et.
+- Yapılan her değişiklikten sonra ilgili Python, JavaScript ve veri bütünlüğü testlerini çalıştır.
+
+SENDEN İSTENEN ÇALIŞMA BİÇİMİ
+
+Önce mevcut projeyi ve ilgili dosyaları analiz et. Bir hata veya geliştirme talebi verildiğinde yalnızca görünen semptomu değil, verinin backend'den frontend'e kadar geçtiği tüm zinciri kontrol et.
+
+Özellikle şu sorulara cevap vermeden değişiklik yapma:
+
+- Bu veri hangi backend servisinde hesaplanıyor?
+- API hangi alanları döndürüyor?
+- Frontend eski veya boş veriyi nasıl yorumluyor?
+- Başarısız ve doğrulanmamış örnekler hesaplamadan gerçekten dışlanıyor mu?
+- Sayfa yenileme ve yeni oturum davranışı doğru mu?
+- Gösterilen metin sunumda bilimsel olarak savunulabilir mi?
+- Değişiklik başka bir meslek promptunu veya grafiği bozuyor mu?
+
+Ardından gerekli değişiklikleri doğrudan workspace üzerinde uygula, statik testleri çalıştır ve sonucu kısa ama açık şekilde raporla. Ücretli canlı API testi gerekiyorsa bunu kendiliğinden yapma; önce kullanıcıya hangi çağrının neden gerektiğini söyle.
+
+PROJENİN HEDEFİ
+
+Ortaya çıkan ürün yalnızca estetik bir demo olmamalı. Sunum sırasında izleyicinin “wow” diyeceği kadar etkileyici, fakat sorulan teknik ve metodolojik sorular karşısında savunulabilecek kadar tutarlı, dürüst ve veri bütünlüğü yüksek olmalıdır.

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080a10">
+    <title>Ortalama Dünya — Research Observatory</title>
+    <link rel="stylesheet" href="./styles/research.css?v=1">
+</head>
+<body>
+    <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+    <aside class="research-sidebar">
+        <a class="research-brand" href="./index.html"><span class="brand-lens"><i></i></span><span><small>AI WORLD LENS</small><strong>Ortalama Dünya</strong></span></a>
+        <p class="programme-label">RESEARCH PROGRAMME</p>
+        <nav aria-label="Research views">
+            <a href="./index.html"><span>01</span>Live Demo<small>Presentation workflow</small></a>
+            <button class="active" data-view="campaigns"><span>02</span>Research Campaigns<small>Protocol & sampling</small></button>
+            <button data-view="atlas"><span>03</span>Representation Atlas<small>Patterns & evidence</small></button>
+        </nav>
+        <div class="boundary-note"><strong>Interpretation boundary</strong><p>Visible patterns in generated images are measured. Identity and audience-level effects are not inferred.</p></div>
+    </aside>
+
+    <main>
+        <header class="research-topbar">
+            <div><small>REPRESENTATION OBSERVATORY / <b id="view-crumb">CAMPAIGNS</b></small><h1 id="view-title">Research Campaigns</h1></div>
+            <div class="health-chip" id="research-health"><i></i><span>Checking research storage</span></div>
+        </header>
+
+        <section class="scope-banner">
+            <div><small>CULTIVATION-INSPIRED REPRESENTATIONAL AUDIT</small><strong>Repeat neutral concepts. Preserve the protocol. Audit the recurring world.</strong></div>
+            <p>Machine classifications are provisional. A campaign consumes provider quota only after an explicit start.</p>
+        </section>
+
+        <section id="campaigns-view" class="research-view">
+            <div class="section-heading"><div><small>01 / PROTOCOL BUILDER</small><h2>Define a locked research wave</h2></div><p>Prompt text, scene policy, providers and model parameters are snapshotted in a deterministic manifest.</p></div>
+            <div class="builder-grid">
+                <article class="research-card setup-card">
+                    <header><span>STUDY</span><strong>Research question</strong></header>
+                    <label>Existing study<select id="study-select"><option value="">Choose a study</option></select></label>
+                    <details id="new-study-panel"><summary>Create a study</summary><div class="form-stack">
+                        <label>Title<input id="study-title" value="Ortalama Dünya Türkiye" maxlength="255"></label>
+                        <label>Slug<input id="study-slug" value="ortalama-dunya-turkiye" maxlength="120"></label>
+                        <label>Research question<textarea id="study-question" rows="3">What recurring social world appears when neutral prompts are repeated across an image generator?</textarea></label>
+                        <button id="create-study" class="secondary-action" type="button">Create study</button>
+                    </div></details>
+                </article>
+                <article class="research-card setup-card">
+                    <header><span>WAVE</span><strong>Frozen protocol snapshot</strong></header>
+                    <label>Existing wave<select id="wave-select"><option value="">Choose a wave</option></select></label>
+                    <div class="form-split"><label>New label<input id="wave-label" placeholder="2026-H2"></label><label>Benchmark version<input id="benchmark-version" value="unconfigured"></label></div>
+                    <button id="create-wave" class="secondary-action" type="button" disabled>Create wave</button>
+                    <div id="wave-manifest" class="manifest-preview">Select a wave to inspect its frozen provider snapshot.</div>
+                </article>
+                <article class="research-card prompt-card">
+                    <header><span>PROMPT SET</span><strong id="prompt-count">0 selected</strong></header>
+                    <div class="prompt-filters"><select id="prompt-language"><option value="en">English</option><option value="tr">Türkçe</option></select><select id="prompt-category"><option value="">All categories</option></select></div>
+                    <div id="research-prompt-list" class="research-prompt-list"><p class="empty-message">Research catalogue will appear after the additive migration.</p></div>
+                </article>
+                <article class="research-card launch-card">
+                    <header><span>CAMPAIGN</span><strong>Persistent sampling plan</strong></header>
+                    <label>Campaign name<input id="campaign-name" placeholder="Baseline run — 2026 H2"></label>
+                    <label>Target per prompt<input id="campaign-target" type="number" min="1" max="1000" value="100"></label>
+                    <div class="workload"><span>Planned workload</span><strong id="campaign-workload">0 samples</strong><small id="campaign-cost-note">No provider call is made while creating or dry-running a campaign.</small></div>
+                    <button id="create-campaign" class="primary-action" type="button" disabled>Create campaign plan</button>
+                </article>
+            </div>
+
+            <div class="section-heading campaign-heading"><div><small>02 / CAMPAIGN LEDGER</small><h2>Execution and canonical counts</h2></div><p>Pause stops new enqueues; already running samples may finish. Resume schedules only missing task slots.</p></div>
+            <div id="campaign-list" class="campaign-list"><div class="large-empty"><strong>No campaign in this wave.</strong><p>Create a plan above. Nothing is sent to a provider until you explicitly start it.</p></div></div>
+        </section>
+
+        <section id="atlas-view" class="research-view" hidden>
+            <div class="atlas-hero"><div><small>MODEL REPRESENTATION ATLAS</small><h2>Prompt × representation dimension</h2><p>Each comparable cell reports generated share minus the configured reference in percentage points. Direction is descriptive, never a value judgement.</p></div><div class="atlas-controls" style="grid-template-columns:130px 100px 135px 210px auto"><label>Wave<select id="atlas-wave"><option value="">Choose a wave</option></select></label><label>Language<select id="atlas-language"><option value="">All</option><option value="en">English</option><option value="tr">Türkçe</option></select></label><label>Category<select id="atlas-category"><option value="">All</option></select></label><label>Analysis source<select id="atlas-analysis-source"><option value="">Auto (single active source)</option></select></label><button id="refresh-atlas" class="secondary-action">Refresh atlas</button></div></div>
+            <div class="atlas-meta"><span><i class="positive"></i>Above reference</span><span><i class="negative"></i>Below reference</span><span><i class="neutral"></i>No reference / insufficient n</span><strong id="atlas-source">No analysis source selected</strong></div>
+            <div class="atlas-table-shell"><table id="atlas-table"><thead><tr><th>Prompt</th><th>Female gap</th><th>55+ gap</th><th>Urban gap</th><th>Occupation alignment</th><th>High technology</th><th>Validated yield</th></tr></thead><tbody><tr><td colspan="7" class="table-empty">Choose a wave to build the atlas from recorded campaign evidence.</td></tr></tbody></table></div>
+            <p class="atlas-footnote">Unclear classifications are excluded from category shares and remain visible through each cell denominator. “No reference” is not treated as zero.</p>
+        </section>
+    </main>
+
+    <aside id="evidence-drawer" class="evidence-drawer" hidden aria-label="Metric evidence">
+        <header><div><small>EVIDENCE-TO-CHART</small><h2 id="evidence-title">Metric evidence</h2></div><button id="close-evidence" aria-label="Close evidence">×</button></header>
+        <p id="evidence-context"></p><div id="evidence-list" class="evidence-list"></div>
+    </aside>
+    <div id="research-toast" class="research-toast" hidden></div>
+    <script src="./js/research.js?v=1"></script>
+</body>
+</html>

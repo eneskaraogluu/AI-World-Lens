@@ -1,0 +1,14 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+venv
+.venv
+__pycache__
+*.py[cod]
+*.db
+*.sqlite*
+delivery_screenshots
+frontend/assets/generations/*
+!frontend/assets/generations/.gitkeep
