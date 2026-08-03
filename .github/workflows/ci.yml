@@ -75,7 +75,7 @@ jobs:
       - name: Validate Compose configuration
         run: docker compose config
       - name: Build application image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false
