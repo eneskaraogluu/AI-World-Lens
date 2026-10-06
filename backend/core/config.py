@@ -23,6 +23,9 @@ def _env_float(name: str, default: float) -> float:
 
 class Settings:
     APP_NAME = os.getenv("APP_NAME", "AI_World_Lens")
+    SERVERLESS_MODE = os.getenv("SERVERLESS_MODE", os.getenv("VERCEL", "")).strip().lower() in {
+        "1", "true", "yes"
+    }
 
     DB_SERVER = os.getenv("DB_SERVER", r".\SQLEXPRESS")
     DB_DATABASE = os.getenv("DB_DATABASE", "WorldLensDB")
@@ -80,8 +83,12 @@ class Settings:
 
     @property
     def DATABASE_URL(self) -> str:
-        explicit_url = os.getenv("DATABASE_URL", "").strip()
+        explicit_url = os.getenv("DATABASE_URL", os.getenv("POSTGRES_URL", "")).strip()
         if explicit_url:
+            if explicit_url.startswith("postgres://"):
+                return "postgresql+psycopg://" + explicit_url[len("postgres://"):]
+            if explicit_url.startswith("postgresql://"):
+                return "postgresql+psycopg://" + explicit_url[len("postgresql://"):]
             return explicit_url
 
         conn_str = (

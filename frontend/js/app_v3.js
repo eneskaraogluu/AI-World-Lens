@@ -1172,6 +1172,7 @@ function showCinemaStartFailure(message) {
 
 function cinemaImageSource(reference) {
     if (!reference) return "";
+    if (reference.startsWith("blob:")) return `/api/assets/image?ref=${encodeURIComponent(reference)}`;
     return reference.startsWith("http") ? reference : `/assets/generations/${String(reference).split("/").map(encodeURIComponent).join("/")}`;
 }
 

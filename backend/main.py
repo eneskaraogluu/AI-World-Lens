@@ -1,9 +1,12 @@
 import logging
+from pathlib import Path
+
 import colorama
 from colorama import Fore, Style
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.api import routes_category, routes_prompt, routes_experiment, routes_statistics, routes_comparison, routes_research, routes_presentation
+from fastapi.staticfiles import StaticFiles
+from backend.api import routes_assets, routes_category, routes_prompt, routes_experiment, routes_statistics, routes_comparison, routes_research, routes_presentation
 from backend.services.queue_worker import queue_worker
 from backend.core.config import settings
 from backend.core.database import SessionLocal
@@ -12,6 +15,43 @@ from backend.services.research_campaign_service import (
     recover_interrupted_campaigns,
     research_schema_available,
 )
+
+
+def initialize_database() -> None:
+    """Create the additive schema and seed the fixed prompt catalogue safely."""
+    from backend.models.base import Base
+    from backend.models import job_models, models, presentation_models, research_models  # noqa: F401
+    from backend.core.database import engine
+    from sqlalchemy import text
+    from sqlalchemy.orm import Session
+
+    with engine.begin() as connection:
+        postgres = connection.dialect.name == "postgresql"
+        if postgres:
+            connection.execute(text("SELECT pg_advisory_lock(90422117)"))
+        db = Session(bind=connection, autocommit=False, autoflush=False)
+        try:
+            Base.metadata.create_all(bind=connection)
+            if db.query(models.Category).count() == 0:
+                import json
+
+                prompt_path = Path(__file__).resolve().parents[1] / "data" / "prompts.json"
+                data = json.loads(prompt_path.read_text(encoding="utf-8"))
+                for category_data in data.get("categories", []):
+                    category = models.Category(name=category_data["name"])
+                    db.add(category)
+                    db.flush()
+                    db.add_all([
+                        models.Prompt(category_id=category.id, text=prompt_text)
+                        for prompt_text in category_data.get("prompts", [])
+                    ])
+                db.flush()
+        except Exception:
+            raise
+        finally:
+            db.close()
+            if postgres:
+                connection.execute(text("SELECT pg_advisory_unlock(90422117)"))
 
 # Initialize Colorama and Logging
 colorama.init(autoreset=True)
@@ -53,6 +93,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Generated evidence lives in the Docker volume mounted at this path. Serving
+# it from the API lets the Vercel frontend proxy images without copying or
+# changing their natural dimensions.
+GENERATIONS_DIR = Path(__file__).resolve().parents[1] / "frontend" / "assets" / "generations"
+if not settings.SERVERLESS_MODE:
+    GENERATIONS_DIR.mkdir(parents=True, exist_ok=True)
+    app.mount(
+        "/assets/generations",
+        StaticFiles(directory=str(GENERATIONS_DIR)),
+        name="generated-evidence",
+    )
+
 # Include Routers
 app.include_router(routes_category.router, prefix="/api/categories", tags=["Categories"])
 app.include_router(routes_prompt.router, prefix="/api/prompts", tags=["Prompts"])
@@ -61,9 +113,11 @@ app.include_router(routes_statistics.router, prefix="/api/statistics", tags=["St
 app.include_router(routes_comparison.router, prefix="/api/comparison", tags=["Comparison"])
 app.include_router(routes_research.router, prefix="/api/research", tags=["Research"])
 app.include_router(routes_presentation.router, prefix="/api/presentation", tags=["Presentation Safety"])
+app.include_router(routes_assets.router, prefix="/api/assets", tags=["Private Evidence"])
 
 @app.on_event("startup")
 async def startup_event():
+    initialize_database()
     db = SessionLocal()
     try:
         if research_schema_available(db):

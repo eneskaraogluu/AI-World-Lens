@@ -1,7 +1,5 @@
 import asyncio
 import logging
-import os
-import tempfile
 import time
 import urllib.error
 import urllib.parse
@@ -12,6 +10,7 @@ from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_ex
 
 from backend.core.config import settings
 from backend.services.base_generator import BaseImageGenerator
+from backend.services.image_storage import save_image_bytes
 
 
 logger = logging.getLogger(__name__)
@@ -49,7 +48,7 @@ class PollinationsGenerator(BaseImageGenerator):
             state.attempt_number,
         ),
     )
-    async def _fetch_image(self, url: str, filepath: str) -> None:
+    async def _fetch_image(self, url: str) -> bytes:
         global _last_request_finished_at
 
         async with _request_lock:
@@ -59,7 +58,7 @@ class PollinationsGenerator(BaseImageGenerator):
                 logger.info("Rate limiter: waiting %.1f seconds", wait_for)
                 await asyncio.sleep(wait_for)
 
-            def download() -> None:
+            def download() -> bytes:
                 headers = {
                     "Accept": "image/jpeg,image/png,image/webp",
                     "User-Agent": "AI-World-Lens/1.1",
@@ -68,7 +67,6 @@ class PollinationsGenerator(BaseImageGenerator):
                     headers["Authorization"] = f"Bearer {settings.POLLINATIONS_API_KEY}"
 
                 req = urllib.request.Request(url, headers=headers)
-                temp_path = None
                 try:
                     with urllib.request.urlopen(
                         req, timeout=settings.POLLINATIONS_TIMEOUT_SECONDS
@@ -79,34 +77,19 @@ class PollinationsGenerator(BaseImageGenerator):
                         raise PollinationsAPIError("Generated image exceeded 12 MB")
                     if not _is_image(payload):
                         raise PollinationsAPIError("Pollinations returned non-image content")
-
-                    destination_dir = os.path.dirname(filepath)
-                    with tempfile.NamedTemporaryFile(
-                        mode="wb", delete=False, dir=destination_dir, suffix=".part"
-                    ) as temp_file:
-                        temp_file.write(payload)
-                        temp_path = temp_file.name
-                    os.replace(temp_path, filepath)
+                    return payload
                 except urllib.error.HTTPError as exc:
                     raise PollinationsAPIError(f"HTTP {exc.code}") from exc
                 except (urllib.error.URLError, TimeoutError) as exc:
                     raise PollinationsAPIError(str(exc)) from exc
-                finally:
-                    if temp_path and os.path.exists(temp_path):
-                        os.unlink(temp_path)
-
             try:
-                await asyncio.to_thread(download)
+                return await asyncio.to_thread(download)
             finally:
                 _last_request_finished_at = time.monotonic()
 
     async def generate_image(self, prompt: str, seed: int) -> Tuple[str | None, float, str | None]:
         start_time = time.monotonic()
-        save_dir = os.path.join("frontend", "assets", "generations")
-        os.makedirs(save_dir, exist_ok=True)
-
         filename = f"pollinations_{seed}_{int(time.time())}.jpg"
-        filepath = os.path.join(save_dir, filename)
         encoded_prompt = urllib.parse.quote(prompt, safe="")
         query = urllib.parse.urlencode(
             {
@@ -121,12 +104,11 @@ class PollinationsGenerator(BaseImageGenerator):
 
         try:
             logger.info("Generating image for %r (seed=%s)", prompt, seed)
-            await self._fetch_image(url, filepath)
-            logger.info("Generated image: %s", filename)
-            return filename, round(time.monotonic() - start_time, 2), None
+            payload = await self._fetch_image(url)
+            reference = await save_image_bytes(payload, filename)
+            logger.info("Generated image: %s", reference)
+            return reference, round(time.monotonic() - start_time, 2), None
         except Exception as exc:
-            if os.path.exists(filepath):
-                os.unlink(filepath)
             error = f"Pollinations generation failed: {exc}"
             logger.error(error)
             return None, round(time.monotonic() - start_time, 2), error

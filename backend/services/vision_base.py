@@ -98,6 +98,10 @@ def guess_mime_type(image_bytes: bytes) -> str:
 
 
 async def load_image_bytes(image_reference: str) -> bytes:
+    if image_reference.startswith("blob:"):
+        from backend.services.image_storage import read_image_bytes
+
+        return await read_image_bytes(image_reference)
     if image_reference.startswith(("http://", "https://")):
         def fetch_image() -> bytes:
             request = urllib.request.Request(

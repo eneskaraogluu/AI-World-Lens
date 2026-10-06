@@ -13,3 +13,6 @@ htmlcov/
 .idea/
 .vscode/
 docker-compose.override.yml
+
+.vercel
+.env*

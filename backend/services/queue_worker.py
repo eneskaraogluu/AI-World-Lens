@@ -59,6 +59,9 @@ class QueueWorker:
         }
 
     def start_workers(self, num_workers: int = 2) -> None:
+        if settings.SERVERLESS_MODE:
+            logger.info("Serverless mode: durable Neon task ledger is active")
+            return
         if any(not task.done() for task in self.workers):
             return
         safe_workers = min(2, max(1, num_workers))
@@ -69,12 +72,18 @@ class QueueWorker:
         logger.info("Started %s queue workers", safe_workers)
 
     async def stop_workers(self) -> None:
+        if settings.SERVERLESS_MODE:
+            return
         for task in self.workers:
             task.cancel()
         await asyncio.gather(*self.workers, return_exceptions=True)
         self.workers.clear()
 
     async def register_job(self, experiment_id, prompt_id, total: int) -> None:
+        if settings.SERVERLESS_MODE:
+            from backend.services.durable_queue_worker import durable_queue_worker
+
+            return await durable_queue_worker.register_job(experiment_id, prompt_id, total)
         experiment_key = str(experiment_id)
         prompt_key = str(prompt_id)
         async with self._jobs_lock:
@@ -99,6 +108,12 @@ class QueueWorker:
         ResearchTask is the source of truth.  This in-memory mirror exists only
         so the legacy experiment status endpoint remains useful.
         """
+        if settings.SERVERLESS_MODE:
+            from backend.services.durable_queue_worker import durable_queue_worker
+
+            return await durable_queue_worker.register_research_job(
+                experiment_id, prompt_id, total, already_completed
+            )
         experiment_key = str(experiment_id)
         async with self._jobs_lock:
             current = self._jobs.get(experiment_key)
@@ -118,6 +133,12 @@ class QueueWorker:
         revision: int,
         fallback_reason: str,
     ) -> None:
+        if settings.SERVERLESS_MODE:
+            from backend.services.durable_queue_worker import durable_queue_worker
+
+            return await durable_queue_worker.register_reanalysis_job(
+                experiment_id, prompt_id, total, revision, fallback_reason
+            )
         experiment_key = str(experiment_id)
         async with self._jobs_lock:
             current = self._jobs.get(experiment_key)
@@ -163,6 +184,10 @@ class QueueWorker:
         }
 
     async def get_job(self, experiment_id) -> Dict[str, Any] | None:
+        if settings.SERVERLESS_MODE:
+            from backend.services.durable_queue_worker import durable_queue_worker
+
+            return await durable_queue_worker.get_job(experiment_id)
         async with self._jobs_lock:
             job = self._jobs.get(str(experiment_id))
             if not job:
@@ -174,6 +199,10 @@ class QueueWorker:
             }
 
     async def enqueue_task(self, task_data: Dict[str, Any]) -> None:
+        if settings.SERVERLESS_MODE:
+            from backend.services.durable_queue_worker import durable_queue_worker
+
+            return await durable_queue_worker.enqueue_task(task_data)
         await self.queue.put(task_data)
 
     async def _complete_task(
@@ -217,7 +246,7 @@ class QueueWorker:
                     local_image = (
                         not reference.startswith(("http://", "https://"))
                         and reference.endswith((".png", ".jpg", ".jpeg", ".webp"))
-                    )
+                    ) or reference.startswith("blob:")
                     job["fallback_available"] = bool(
                         settings.OPENAI_API_KEY
                         and settings.FALLBACK_VISION_PROVIDER == "openai"

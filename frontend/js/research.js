@@ -1,5 +1,8 @@
-const API = "http://localhost:8000/api/research";
-const HEALTH_API = "http://localhost:8000/api/health";
+const RESEARCH_API_ORIGIN = ["localhost", "127.0.0.1"].includes(window.location?.hostname || "localhost")
+    ? "http://localhost:8000"
+    : "";
+const API = `${RESEARCH_API_ORIGIN}/api/research`;
+const HEALTH_API = `${RESEARCH_API_ORIGIN}/api/health`;
 const state = { studies: [], waves: [], prompts: [], campaigns: [], selectedPrompts: new Set(), view: "campaigns", atlasSource: null };
 
 const $ = (id) => document.getElementById(id);
@@ -141,7 +144,7 @@ async function openEvidence(button) {
     const data = await api(`/waves/${button.dataset.evidenceWave}/atlas/evidence?${params}`); const drawer = $("evidence-drawer"); drawer.hidden = false; $("evidence-title").textContent = `${categoryValue} evidence`; $("evidence-context").textContent = `${data.items.length} active-revision records. Every item explains whether it contributes to this metric category.`;
     $("evidence-list").innerHTML = data.items.length ? data.items.map(item => `<article class="evidence-item">${item.image_reference ? `<img src="${escapeHtml(imageUrl(item.image_reference))}" alt="Generated campaign evidence" loading="lazy">` : ""}<div class="evidence-body"><strong>${escapeHtml(item.prompt)}</strong><p>${escapeHtml(item.inclusion_reason)}</p><div class="evidence-tags"><span>${escapeHtml(item.analyzer_provider)} / rev ${item.analyzer_revision}</span><span>${escapeHtml(item.source_type)}</span><span>${item.included_in_metric ? "INCLUDED" : "NOT IN CATEGORY"}</span><span>${escapeHtml(item.generation_model)}</span></div></div></article>`).join("") : `<p class="empty-message">No active-revision evidence is available for this cell.</p>`;
 }
-function imageUrl(reference) { if (/^https?:\/\//i.test(reference)) return reference; const file = reference.split(/[\\/]/).pop(); return `./assets/generations/${encodeURIComponent(file)}`; }
+function imageUrl(reference) { if (reference.startsWith("blob:")) return `/api/assets/image?ref=${encodeURIComponent(reference)}`; if (/^https?:\/\//i.test(reference)) return reference; const file = reference.split(/[\\/]/).pop(); return `./assets/generations/${encodeURIComponent(file)}`; }
 
 function bindEvents() {
     document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => switchView(button.dataset.view)));

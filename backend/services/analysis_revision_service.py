@@ -42,7 +42,7 @@ def is_local_generated_result(result: Result) -> bool:
     if not is_generated_result(result):
         return False
     reference = (result.image_reference or "").lower()
-    return not reference.startswith(("http://", "https://")) and reference.endswith(
+    return (reference.startswith("blob:") or not reference.startswith(("http://", "https://"))) and reference.endswith(
         (".png", ".jpg", ".jpeg", ".webp")
     )
 

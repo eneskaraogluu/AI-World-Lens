@@ -1,4 +1,6 @@
-const API_BASE = "http://localhost:8000/api";
+const LOCAL_API_HOSTS = new Set(["localhost", "127.0.0.1"]);
+const API_ORIGIN = LOCAL_API_HOSTS.has(window.location?.hostname || "localhost") ? "http://localhost:8000" : "";
+const API_BASE = `${API_ORIGIN}/api`;
 
 async function apiJson(url, options = {}) {
     const response = await fetch(url, options);
@@ -15,14 +17,14 @@ async function apiJson(url, options = {}) {
 }
 
 const fetchHealth = () => apiJson(`${API_BASE}/health`);
-const fetchCategories = () => apiJson(`${API_BASE}/categories/`);
-const fetchPrompts = () => apiJson(`${API_BASE}/prompts/`);
+const fetchCategories = () => apiJson(`${API_BASE}/categories`);
+const fetchPrompts = () => apiJson(`${API_BASE}/prompts`);
 const experimentQuery = (experimentId) => experimentId ? `?experiment_id=${encodeURIComponent(experimentId)}` : "";
 const fetchComparison = (promptId, experimentId = null) => apiJson(`${API_BASE}/comparison/prompts/${promptId}${experimentQuery(experimentId)}`);
 const fetchImages = (promptId, experimentId = null) => apiJson(`${API_BASE}/comparison/prompts/${promptId}/images${experimentQuery(experimentId)}`);
 const fetchExperimentStatus = (experimentId) => apiJson(`${API_BASE}/experiments/${experimentId}/status`);
 const fetchExperimentTrajectory = (experimentId) => apiJson(`${API_BASE}/experiments/${experimentId}/trajectory`);
-const fetchExperiments = (promptId = null) => apiJson(`${API_BASE}/experiments/${promptId ? `?prompt_id=${encodeURIComponent(promptId)}` : ""}`);
+const fetchExperiments = (promptId = null) => apiJson(`${API_BASE}/experiments${promptId ? `?prompt_id=${encodeURIComponent(promptId)}` : ""}`);
 const fetchExperimentComparison = (experimentId) => apiJson(`${API_BASE}/comparison/experiments/${experimentId}`);
 const fetchExperimentResults = (experimentId) => apiJson(`${API_BASE}/experiments/${experimentId}/results`);
 const reanalyzeExperiment = (experimentId, provider = "openai") => apiJson(`${API_BASE}/experiments/${experimentId}/reanalyze`, {
@@ -44,7 +46,7 @@ const markPresentationReplay = (backupId) => apiJson(`${API_BASE}/presentation/b
 const runPresentationPreflight = () => apiJson(`${API_BASE}/presentation/preflight`);
 
 async function runExperiment(promptId, iterations) {
-    const experiment = await apiJson(`${API_BASE}/experiments/`, {
+    const experiment = await apiJson(`${API_BASE}/experiments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

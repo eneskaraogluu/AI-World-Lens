@@ -21,7 +21,7 @@ from backend.services.analysis_revision_service import (
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 def list_experiments(prompt_id: UUID | None = None, db: Session = Depends(get_db)):
     query = db.query(Experiment)
     if prompt_id:
@@ -47,7 +47,7 @@ def list_experiments(prompt_id: UUID | None = None, db: Session = Depends(get_db
         })
     return payload
 
-@router.post("/", response_model=ExperimentResponse)
+@router.post("", response_model=ExperimentResponse)
 def create_new_experiment(exp_in: ExperimentCreate, db: Session = Depends(get_db)):
     exp = create_experiment(db, exp_in)
     return exp
@@ -124,6 +124,10 @@ async def read_experiment_status(exp_id: UUID, db: Session = Depends(get_db)):
     if not exp:
         raise HTTPException(status_code=404, detail="Experiment not found")
 
+    if settings.SERVERLESS_MODE:
+        from backend.services.durable_queue_worker import durable_queue_worker
+
+        await durable_queue_worker.process_next(exp_id)
     job = await queue_worker.get_job(exp_id)
     if job:
         return job

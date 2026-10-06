@@ -2,8 +2,6 @@ import asyncio
 import base64
 import binascii
 import logging
-import os
-import tempfile
 import time
 import uuid
 from typing import Tuple
@@ -12,6 +10,7 @@ from openai import OpenAI
 
 from backend.core.config import settings
 from backend.services.base_generator import BaseImageGenerator
+from backend.services.image_storage import save_image_bytes
 
 logger = logging.getLogger(__name__)
 PNG_HEADER = b"\x89PNG\r\n\x1a\n"
@@ -72,26 +71,11 @@ class OpenAIImageGenerator(BaseImageGenerator):
 
     async def generate_image(self, prompt: str, seed: int | None = None) -> Tuple[str | None, float, str | None]:
         start = time.monotonic()
-        save_dir = os.path.join("frontend", "assets", "generations")
-        os.makedirs(save_dir, exist_ok=True)
         filename = f"openai_{uuid.uuid4()}.png"
-        filepath = os.path.join(save_dir, filename)
-        temp_path = None
         try:
             payload = await asyncio.to_thread(self._generate, prompt)
-            with tempfile.NamedTemporaryFile(mode="wb", delete=False, dir=save_dir, suffix=".part") as temp_file:
-                temp_file.write(payload)
-                temp_file.flush()
-                os.fsync(temp_file.fileno())
-                temp_path = temp_file.name
-            os.replace(temp_path, filepath)
-            temp_path = None
-            return filename, round(time.monotonic() - start, 2), None
+            reference = await save_image_bytes(payload, filename)
+            return reference, round(time.monotonic() - start, 2), None
         except Exception as exc:
             logger.error("OpenAI image generation failed: %s", type(exc).__name__)
             return None, round(time.monotonic() - start, 2), "OpenAI image generation failed"
-        finally:
-            if temp_path and os.path.exists(temp_path):
-                os.unlink(temp_path)
-            if os.path.exists(filepath) and os.path.getsize(filepath) == 0:
-                os.unlink(filepath)

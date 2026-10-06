@@ -19,6 +19,7 @@ from backend.models.models import Experiment, Prompt, Result
 from backend.models.presentation_models import PresentationBackup
 from backend.services.analysis_revision_service import effective_analyses, is_generated_result
 from backend.services.comparison_service import get_comparison
+from backend.services.image_storage import blob_enabled, read_image_bytes_sync, save_image_bytes_sync
 from backend.services.vision_base import guess_mime_type
 
 
@@ -46,23 +47,24 @@ def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
-def _read_local_image(reference: str) -> tuple[Path, bytes, str]:
+def _read_image(reference: str) -> tuple[Path | None, bytes, str]:
     if not reference or reference.startswith(("http://", "https://")):
-        raise PresentationBackupError("Presentation backups require local image assets")
-    relative = Path(reference)
-    if relative.is_absolute() or ".." in relative.parts:
-        raise PresentationBackupError("Unsafe image path in source experiment")
-    # Legacy generations are flat filenames. Backup paths may contain their
-    # controlled presentation_backups prefix during later verification.
-    source = (GENERATIONS_ROOT / relative).resolve()
-    root = GENERATIONS_ROOT.resolve()
-    if root not in source.parents:
-        raise PresentationBackupError("Image path escapes the generation asset directory")
-    if not source.is_file():
-        raise PresentationBackupError(f"Generated image is missing: {relative.name}")
-    data = source.read_bytes()
-    mime = guess_mime_type(data)
-    return source, data, mime
+        raise PresentationBackupError("Presentation backups require managed image assets")
+    try:
+        if reference.startswith("blob:"):
+            data = read_image_bytes_sync(reference)
+            source = None
+        else:
+            relative = Path(reference)
+            if relative.is_absolute() or ".." in relative.parts:
+                raise ValueError("Unsafe local image reference")
+            source = (GENERATIONS_ROOT / relative).resolve()
+            if GENERATIONS_ROOT.resolve() not in source.parents or not source.is_file():
+                raise FileNotFoundError(relative.name)
+            data = source.read_bytes()
+    except (OSError, ValueError) as exc:
+        raise PresentationBackupError("Generated image is missing or unreadable") from exc
+    return source, data, guess_mime_type(data)
 
 
 def _asset_extension(mime: str) -> str:
@@ -162,9 +164,11 @@ def create_backup(db: Session, experiment_id: UUID, name: str | None = None) -> 
     backup_id = uuid.uuid4()
     staging = BACKUP_ROOT / f".{backup_id}.staging"
     final_dir = BACKUP_ROOT / str(backup_id)
-    if staging.exists() or final_dir.exists():
-        raise PresentationBackupError("Backup asset destination already exists", 409)
-    staging.mkdir(parents=True, exist_ok=False)
+    use_blob = blob_enabled()
+    if not use_blob:
+        if staging.exists() or final_dir.exists():
+            raise PresentationBackupError("Backup asset destination already exists", 409)
+        staging.mkdir(parents=True, exist_ok=False)
     manifest_results = []
     by_result = {item.result.id: item for item in validated}
     try:
@@ -174,21 +178,28 @@ def create_backup(db: Session, experiment_id: UUID, name: str | None = None) -> 
                 continue
             if analysis.detected_person_count is None or not analysis.detected_gender or not analysis.detected_age_group:
                 raise PresentationBackupError("A validated result is missing required analysis fields")
-            _, source_bytes, mime = _read_local_image(result.image_reference or "")
+            _, source_bytes, mime = _read_image(result.image_reference or "")
             filename = f"{sequence:02d}-{uuid.uuid4().hex}{_asset_extension(mime)}"
-            temporary = staging / f".{filename}.tmp"
-            destination = staging / filename
-            with temporary.open("xb") as target:
-                target.write(source_bytes)
-                target.flush()
-                os.fsync(target.fileno())
-            os.replace(temporary, destination)
-            copied = destination.read_bytes()
+            if use_blob:
+                image_path = save_image_bytes_sync(
+                    source_bytes, filename, f"presentation_backups/{backup_id}"
+                )
+                copied = read_image_bytes_sync(image_path)
+            else:
+                temporary = staging / f".{filename}.tmp"
+                destination = staging / filename
+                with temporary.open("xb") as target:
+                    target.write(source_bytes)
+                    target.flush()
+                    os.fsync(target.fileno())
+                os.replace(temporary, destination)
+                copied = destination.read_bytes()
+                image_path = f"presentation_backups/{backup_id}/{filename}"
             if guess_mime_type(copied) != mime or sha256_bytes(copied) != sha256_bytes(source_bytes):
                 raise PresentationBackupError("Copied presentation asset failed integrity validation")
             manifest_results.append({
                 "result_id": str(result.id), "sequence": sequence,
-                "image_path": f"presentation_backups/{backup_id}/{filename}",
+                "image_path": image_path,
                 "image_sha256": sha256_bytes(copied), "mime_type": mime,
                 "status": "validated",
                 "visible_gender_presentation": analysis.detected_gender,
@@ -198,9 +209,11 @@ def create_backup(db: Session, experiment_id: UUID, name: str | None = None) -> 
                 "quality_status": analysis.error_code if analysis.quality_assessed else "legacy_not_assessed",
                 "relative_completion_order": sequence,
             })
-        os.replace(staging, final_dir)
+        if not use_blob:
+            os.replace(staging, final_dir)
     except Exception:
-        shutil.rmtree(staging, ignore_errors=True)
+        if not use_blob:
+            shutil.rmtree(staging, ignore_errors=True)
         raise
 
     generator_model = next((result.model_name for result in results if result.model_name), settings.OPENAI_IMAGE_MODEL)
@@ -247,7 +260,8 @@ def create_backup(db: Session, experiment_id: UUID, name: str | None = None) -> 
         return row
     except Exception:
         db.rollback()
-        shutil.rmtree(final_dir, ignore_errors=True)
+        if not use_blob:
+            shutil.rmtree(final_dir, ignore_errors=True)
         raise
 
 
@@ -266,7 +280,7 @@ def verify_backup(db: Session, row: PresentationBackup, *, persist: bool = True)
     asset_ok = True
     for item in results:
         try:
-            _, data, mime = _read_local_image(item.get("image_path", ""))
+            _, data, mime = _read_image(item.get("image_path", ""))
             if mime != item.get("mime_type") or sha256_bytes(data) != item.get("image_sha256"):
                 asset_ok = False
         except (OSError, ValueError, PresentationBackupError):
